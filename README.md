@@ -1,27 +1,79 @@
-# 印染ERP系统 - MVP版本
+# 印染ERP系统 v2.1
 
 一个完整的印染制造企业ERP系统，覆盖从订单接收到成本核算的核心流程。
 
-## 技术栈
+## 📋 版本信息
+
+- **当前版本**: 2.1
+- **发布日期**: 2026-01-23
+- **Node.js版本**: 24.x
+- **数据库**: PostgreSQL 15
+
+## 🚀 快速开始
+
+### 前置要求
+
+- Docker Desktop (推荐)
+- Node.js 24+ (本地开发)
+- PostgreSQL 15+ (可选，Docker已包含)
+
+### 方式一：完全Docker部署（推荐生产环境）
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/TikatAK/TikatERP.git
+cd TikatERP
+
+# 2. 启动所有服务
+start.bat
+# 或使用命令行
+docker-compose up -d
+
+# 3. 访问系统
+# 前端: http://localhost:5173
+# 后端: http://localhost:3000
+```
+
+### 方式二：本地开发模式（推荐开发测试）
+
+```bash
+# 1. 启动服务
+start-local.bat
+
+# 2. 系统会自动：
+#    - 启动PostgreSQL数据库（Docker）
+#    - 启动后端开发服务器（Node.js）
+#    - 启动前端开发服务器（Node.js）
+```
+
+### 默认账号
+
+- **用户名**: admin
+- **密码**: admin123
+
+## 🏗️ 技术栈
 
 ### 后端
-- NestJS (TypeScript)
-- PostgreSQL 15
-- JWT认证
-- bcrypt密码加密
+- **框架**: NestJS (TypeScript)
+- **数据库**: PostgreSQL 15
+- **认证**: JWT + Passport
+- **密码加密**: bcryptjs
+- **ORM**: 原生SQL查询
 
 ### 前端
-- Vue 3 (TypeScript)
-- Pinia状态管理
-- Element Plus UI组件库
-- ECharts图表
-- Axios HTTP客户端
+- **框架**: Vue 3 (Composition API + TypeScript)
+- **状态管理**: Pinia
+- **UI组件**: Element Plus
+- **图表**: ECharts
+- **HTTP客户端**: Axios
+- **构建工具**: Vite
 
 ### 部署
-- Docker & Docker Compose
-- 支持本地或云部署
+- **容器化**: Docker + Docker Compose
+- **Node版本**: 24-alpine
+- **数据持久化**: Docker Volumes
 
-## 核心功能
+## 📦 核心功能
 
 ### 1. 用户与权限管理
 - JWT身份认证
@@ -63,74 +115,7 @@
 - 生产趋势分析
 - 动态权限渲染
 
-## 快速开始
-
-### 前置要求
-- Docker & Docker Compose
-- Node.js 18+ (本地开发)
-- PostgreSQL 15+ (本地开发)
-
-### 一键启动（推荐）
-
-```bash
-# 克隆项目
-git clone <repository-url>
-cd ERP
-
-# 启动所有服务
-docker-compose up -d
-
-# 查看日志
-docker-compose logs -f
-```
-
-服务启动后访问：
-- 前端: http://localhost:5173
-- 后端API: http://localhost:3000
-
-### 默认账号
-- 用户名: `admin`
-- 密码: `admin123`
-
-## 本地开发
-
-### 后端开发
-
-```bash
-cd backend
-
-# 安装依赖
-npm install
-
-# 配置环境变量
-cp .env.example .env
-
-# 启动开发服务器
-npm run start:dev
-```
-
-### 前端开发
-
-```bash
-cd frontend
-
-# 安装依赖
-npm install
-
-# 启动开发服务器
-npm run dev
-```
-
-### 数据库初始化
-
-```bash
-# 使用Docker启动PostgreSQL
-docker-compose up -d postgres
-
-# 数据库会自动执行 database/init.sql 初始化脚本
-```
-
-## 项目结构
+## 📂 项目结构
 
 ```
 ERP/
@@ -144,57 +129,102 @@ ERP/
 │   │   ├── production/     # 生产执行模块
 │   │   ├── recipes/        # 配方管理模块
 │   │   ├── cost/           # 成本核算模块
-│   │   ├── dashboard/      # 仪表盘模块
-│   │   └── database/       # 数据库连接
+│   │   └── dashboard/      # 仪表盘模块
 │   ├── package.json
 │   └── Dockerfile
 ├── frontend/               # Vue 3前端
 │   ├── src/
 │   │   ├── views/         # 页面组件
-│   │   ├── layout/        # 布局组件
 │   │   ├── stores/        # Pinia状态管理
-│   │   ├── router/        # 路由配置
-│   │   └── utils/         # 工具函数
+│   │   └── router/        # 路由配置
 │   ├── package.json
 │   └── Dockerfile
 ├── database/              # 数据库脚本
 │   └── init.sql          # 初始化SQL
 ├── docker-compose.yml    # Docker编排
-└── README.md            # 项目文档
+├── start.bat            # Docker启动脚本
+├── start-local.bat      # 本地开发启动脚本
+├── CHANGELOG.md         # 版本变更记录
+└── README.md           # 项目文档
 ```
 
-## API接口示例
+## 🔧 常用命令
 
-### 认证
-- `POST /api/auth/login` - 用户登录
-- `POST /api/auth/register` - 用户注册
+### Docker模式
 
-### 订单管理
-- `GET /api/orders` - 获取订单列表
-- `POST /api/orders` - 创建订单
-- `GET /api/orders/:id` - 获取订单详情
+```bash
+# 启动所有服务
+docker-compose up -d
 
-### 排产管理
-- `GET /api/schedule` - 获取排产列表
-- `POST /api/schedule` - 创建生产任务
-- `PUT /api/schedule/:id/reassign` - 调整排产
+# 查看服务状态
+docker-compose ps
 
-### 生产执行
-- `GET /api/production/jobs` - 获取生产任务
-- `POST /api/production/work/report` - 报工
-- `POST /api/production/issues` - 异常上报
+# 查看日志
+docker-compose logs -f
 
-### 成本核算
-- `GET /api/cost/job/:id` - 获取缸号成本
-- `POST /api/cost/record` - 记录成本
-- `GET /api/cost/order/:id/profit` - 获取订单毛利
+# 停止所有服务
+docker-compose down
 
-### Dashboard
-- `GET /api/dashboard/kpis` - 获取KPI指标
-- `GET /api/dashboard/production-trend` - 生产趋势
-- `GET /api/dashboard/workshop-load` - 车间负荷
+# 重新构建镜像
+docker-compose build
 
-## 数据库表结构
+# 重启服务
+docker-compose restart
+```
+
+### 本地开发模式
+
+```bash
+# 后端开发
+cd backend
+npm install
+npm run start:dev
+
+# 前端开发
+cd frontend
+npm install
+npm run dev
+
+# 数据库（Docker）
+docker-compose up -d postgres
+```
+
+## 🔄 关机后重启步骤
+
+### Docker模式
+1. 确保 Docker Desktop 正在运行
+2. 双击 `start.bat` 或运行 `docker-compose up -d`
+3. 访问 http://localhost:5173
+
+### 本地开发模式
+1. 确保 Docker Desktop 正在运行
+2. 双击 `start-local.bat`
+3. 访问 http://localhost:5173
+
+**数据不会丢失** - 数据库数据存储在Docker volume中，会自动保留！
+
+## ⚙️ Docker镜像源配置（中国大陆用户）
+
+如果遇到Docker镜像下载失败，请配置国内镜像源：
+
+1. 打开 Docker Desktop → Settings → Docker Engine
+2. 添加以下配置：
+
+```json
+{
+  "registry-mirrors": [
+    "https://docker.m.daocloud.io",
+    "https://docker.1panel.live",
+    "https://hub.rat.dev"
+  ]
+}
+```
+
+3. 点击 "Apply & Restart"
+
+详细配置说明请查看：`docker-镜像源配置说明.md`
+
+## 🗄️ 数据库表结构
 
 ### 核心表
 - `users` - 用户表
@@ -202,7 +232,6 @@ ERP/
 - `permissions` - 权限表
 - `user_roles` - 用户角色关联
 - `role_permissions` - 角色权限关联
-- `data_permissions` - 数据权限表
 
 ### 业务表
 - `customers` - 客户表
@@ -219,72 +248,42 @@ ERP/
 - `energy_logs` - 能耗日志表
 - `audit_logs` - 审计日志表
 
-## 安全特性
+## 🔐 安全特性
 
 - 所有API接口验证JWT令牌
-- 密码使用bcrypt加密存储
+- 密码使用bcryptjs加密存储
 - 功能权限验证（菜单+按钮级）
 - 数据权限自动过滤（行级安全）
 - 敏感操作记录审计日志
 - CORS跨域配置
 - SQL注入防护（参数化查询）
 
-## 演示流程
+## 🆕 版本更新
 
-### 完整业务流程演示
+### v2.1 (2026-01-23)
+- ✅ 统一Node.js版本为24.x
+- ✅ 优化前端Docker构建（生产模式）
+- ✅ 配置国内Docker镜像源
+- ✅ 修复本地开发与Docker部署的环境差异
 
-1. **登录系统**
-   - 使用 admin/admin123 登录
-   - 系统自动加载用户权限
+### v2.0 (2026-01-23)
+- ✅ 更换为bcryptjs密码加密库
+- ✅ 完善数据库表结构（新增10个业务表）
+- ✅ 优化排产字段命名
+- ✅ 增强启动脚本错误处理
+- ✅ 文档本地化
 
-2. **创建订单**
-   - 进入"订单管理"
-   - 点击"新建订单"
-   - 选择客户、物料、颜色、数量、交期
-   - 提交订单
+详细变更请查看：[CHANGELOG.md](CHANGELOG.md)
 
-3. **排产管理**
-   - 进入"排产管理"
-   - 系统自动生成生产任务（缸号）
-   - 分配车间、机台、优先级
-   - 设置计划开始/结束时间
-
-4. **生产报工**
-   - 进入"生产执行"
-   - 扫码或输入缸号
-   - 选择工序（染色/水洗/定型）
-   - 输入完成数量
-   - 提交报工
-
-5. **异常上报**
-   - 在"生产执行"页面
-   - 切换到"异常上报"标签
-   - 选择问题类型（色差/断布/设备故障）
-   - 填写描述和严重程度
-   - 提交异常
-
-6. **成本核算**
-   - 进入"成本核算"
-   - 输入缸号查询
-   - 查看成本明细（染料+水电汽+人工+折旧）
-   - 分析成本构成
-
-7. **Dashboard分析**
-   - 查看KPI指标卡片
-   - 分析车间负荷图表
-   - 查看生产趋势
-   - 识别质量问题
-
-## 常见问题
+## ❓ 常见问题
 
 ### 1. Docker启动失败
 ```bash
+# 检查Docker Desktop是否运行
 # 检查端口占用
-netstat -ano | findstr "5432"
-netstat -ano | findstr "3000"
-netstat -ano | findstr "5173"
+netstat -ano | findstr "5432 3000 5173"
 
-# 停止并重新启动
+# 重新启动
 docker-compose down
 docker-compose up -d
 ```
@@ -295,49 +294,31 @@ docker-compose up -d
 - 验证数据库凭据
 
 ### 3. 前端无法访问后端
-- 检查 `frontend/.env` 中的 `VITE_API_URL`
-- 确认后端服务运行在 http://localhost:3000
+- 检查后端服务是否运行在 http://localhost:3000
 - 查看浏览器控制台错误信息
+- 确认CORS配置正确
 
-## 技术亮点
+### 4. Docker镜像下载失败
+- 配置国内镜像源（见上方配置说明）
+- 检查网络连接
+- 尝试使用VPN
 
-1. **权限系统**
-   - RBAC + 行级数据权限
-   - 动态菜单渲染
-   - 按钮级权限控制
+## 📝 开发注意事项
 
-2. **实时性**
-   - 扫码报工即时更新
-   - 库存自动扣减
-   - 成本实时归集
+### 本地开发 vs Docker部署差异
 
-3. **数据一致性**
-   - 事务保证
-   - 乐观锁控制
-   - 审计日志追踪
+为避免环境差异问题，请注意：
 
-4. **可扩展性**
-   - 模块化设计
-   - RESTful API
-   - Docker容器化
+1. **Node.js版本**: 统一使用24.x
+2. **环境变量**: 确保在docker-compose.yml中定义
+3. **文件路径**: 使用相对路径，避免绝对路径
+4. **大小写敏感**: Linux区分大小写，Windows不区分
 
-## 后续优化方向
-
-- [ ] 添加单元测试和集成测试
-- [ ] 实现WebSocket实时推送
-- [ ] 增加文件上传功能（质量问题图片）
-- [ ] 优化排产算法（考虑机台负荷、工艺匹配）
-- [ ] 添加报表导出功能（Excel/PDF）
-- [ ] 实现移动端适配
-- [ ] 增加数据备份和恢复功能
-- [ ] 性能优化（缓存、索引优化）
-- [ ] 国际化支持
-
-## 许可证
+## 📄 许可证
 
 MIT License
 
-## 联系方式
+## 📧 联系方式
 
 如有问题或建议，请提交Issue或Pull Request。
 
