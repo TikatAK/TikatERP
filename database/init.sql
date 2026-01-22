@@ -101,3 +101,121 @@ CREATE TABLE dyes (
     unit_price DECIMAL(10,2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 销售订单表
+CREATE TABLE sales_orders (
+    id SERIAL PRIMARY KEY,
+    order_no VARCHAR(50) UNIQUE NOT NULL,
+    customer_id INTEGER REFERENCES customers(id),
+    material_id INTEGER REFERENCES materials(id),
+    quantity DECIMAL(10,2) NOT NULL,
+    unit VARCHAR(20) DEFAULT 'kg',
+    delivery_date DATE,
+    process_flow VARCHAR(200),
+    status VARCHAR(20) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 生产任务表（缸号）
+CREATE TABLE production_jobs (
+    id SERIAL PRIMARY KEY,
+    job_no VARCHAR(50) UNIQUE NOT NULL,
+    order_id INTEGER REFERENCES sales_orders(id),
+    material_id INTEGER REFERENCES materials(id),
+    quantity DECIMAL(10,2) NOT NULL,
+    workshop VARCHAR(50),
+    machine_no VARCHAR(50),
+    priority INTEGER DEFAULT 5,
+    status VARCHAR(20) DEFAULT 'pending',
+    start_time TIMESTAMP,
+    end_time TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 工序步骤表
+CREATE TABLE process_steps (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER REFERENCES production_jobs(id) ON DELETE CASCADE,
+    step_no INTEGER NOT NULL,
+    step_name VARCHAR(100) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    start_time TIMESTAMP,
+    end_time TIMESTAMP,
+    operator_id INTEGER REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 配方表
+CREATE TABLE recipes (
+    id SERIAL PRIMARY KEY,
+    recipe_code VARCHAR(50) UNIQUE NOT NULL,
+    recipe_name VARCHAR(200) NOT NULL,
+    material_id INTEGER REFERENCES materials(id),
+    color_code VARCHAR(50),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 配方明细表
+CREATE TABLE recipe_items (
+    id SERIAL PRIMARY KEY,
+    recipe_id INTEGER REFERENCES recipes(id) ON DELETE CASCADE,
+    dye_id INTEGER REFERENCES dyes(id),
+    quantity DECIMAL(10,3) NOT NULL,
+    unit VARCHAR(20) DEFAULT 'kg',
+    sequence INTEGER
+);
+
+-- 报工记录表
+CREATE TABLE work_reports (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER REFERENCES production_jobs(id),
+    step_id INTEGER REFERENCES process_steps(id),
+    operator_id INTEGER REFERENCES users(id),
+    report_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    quantity DECIMAL(10,2),
+    status VARCHAR(20),
+    remarks TEXT
+);
+
+-- 质量问题表
+CREATE TABLE quality_issues (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER REFERENCES production_jobs(id),
+    issue_type VARCHAR(50),
+    description TEXT,
+    reporter_id INTEGER REFERENCES users(id),
+    status VARCHAR(20) DEFAULT 'open',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 成本记录表
+CREATE TABLE cost_records (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER REFERENCES production_jobs(id),
+    cost_type VARCHAR(50),
+    amount DECIMAL(10,2),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 能耗日志表
+CREATE TABLE energy_logs (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER REFERENCES production_jobs(id),
+    energy_type VARCHAR(50),
+    consumption DECIMAL(10,2),
+    unit VARCHAR(20),
+    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 审计日志表
+CREATE TABLE audit_logs (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    action VARCHAR(100),
+    resource_type VARCHAR(50),
+    resource_id INTEGER,
+    details TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

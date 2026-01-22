@@ -10,7 +10,6 @@ export class RecipesService {
       SELECT r.*, m.material_name
       FROM recipes r
       LEFT JOIN materials m ON r.material_id = m.id
-      WHERE r.status = 'active'
       ORDER BY r.created_at DESC
     `;
     const result = await this.pool.query(query);

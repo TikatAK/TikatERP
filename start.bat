@@ -24,9 +24,19 @@ echo.
 
 REM 停止现有容器
 docker-compose down
+if errorlevel 1 (
+    echo 警告: 停止容器时出现问题，继续执行...
+)
 
 REM 启动所有服务
 docker-compose up -d
+if errorlevel 1 (
+    echo 错误: 启动服务失败！
+    echo 请检查 docker-compose.yml 文件是否存在
+    echo 或者 Docker Desktop 是否正在运行
+    pause
+    exit /b 1
+)
 
 echo.
 echo 等待服务启动...
